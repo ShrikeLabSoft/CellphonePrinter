@@ -15,20 +15,20 @@ api = Api(app)
 command = 0
 
 @app.route('/')
-	
 
 def index():
 	return 'Phone Printer conection successful -V'
 
-
 class ApiCall(Resource):
-	def get(self, distance,speed):
-		print('Distance-> ' + distance + '\n' + 'Speed-> ' + speed + '\n')
+	def get(self, motor, direc, speed):
 
-		command = 2
-		sFA.write((str(command)+'\r').encode())
+		print('Motor-> ' + motor + 'Direction-> ' + direc + '\n' + 'Speed-> ' + speed + '\n')
+
+		sFA.write((str(motor)+'\r').encode())
+		sFA.write((str(direc)+'\r').encode())
+		sFA.write((str(speed)+'\r').encode())
 		
-api.add_resource(ApiCall,'/<distance>,<speed>')
+api.add_resource(ApiCall,'/<motor>,<direc>,<speed>')
 
 if __name__ == '__main__' :
 	app.run(debug=True,host='0.0.0.0')

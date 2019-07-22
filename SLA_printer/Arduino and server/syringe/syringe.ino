@@ -1,123 +1,129 @@
-int smDirectionPin = 2; //Direction pin
-int smStepPin = 3; //Stepper pin
-int smDirectionPin2 = 4; //Direction pin
-int smStepPin2 = 5; //Stepper pin
+int sWaterDir = 2; //Direction pin
+int sWaterStep = 3; //Stepper pin
+
+int puWaterDir = 4; //Direction pin
+int puWaterStep = 5; //Stepper pin
+
+int puInkDir = 6; //Direction pin
+int puInkStep = 7; //Stepper pin
+
+int zMoveDir = 8; //Direction pin
+int zMoveStep = 9; //Stepper pin
+
+int switchZ = 10;
+int switchWater = 11;
+int switchInk = 12;
+
 int instruction = 0;
-int dobEngin =0;
+int direct = 0;
+int speedd = 0;
 
 String x;
-String y;
+String y, z;
+
+boolean direccion = HIGH;
+
+int volumeToInput = 1600;
  
 void setup(){
-  //Sets all pin to output; the microcontroller will send them(the pins) bits, it will not expect to receive any bits from thiese pins.*/
-  pinMode(smDirectionPin, OUTPUT);
-  pinMode(smStepPin, OUTPUT);
-  pinMode(smDirectionPin2, OUTPUT);
-  pinMode(smStepPin2, OUTPUT);
-  digitalWrite (smDirectionPin, LOW);
-  digitalWrite (smStepPin, LOW);
-  digitalWrite (smDirectionPin2, LOW);
-  digitalWrite (smStepPin2, LOW);
+  pinMode(sWaterDir, OUTPUT);
+  pinMode(puWaterDir, OUTPUT);
+  pinMode(puInkDir, OUTPUT);
+  pinMode(zMoveDir, OUTPUT);
+
+  pinMode(sWaterStep, OUTPUT);
+  pinMode(puWaterStep, OUTPUT);
+  pinMode(puInkStep, OUTPUT);
+  pinMode(zMoveStep, OUTPUT);
+
+  pinMode(switchZ, INPUT);
+  pinMode(switchWater, INPUT);
+  pinMode(switchInk, INPUT);
+  
+  digitalWrite (sWaterDir, LOW);
+  digitalWrite (puWaterDir, LOW);
+  digitalWrite (puInkDir, LOW);
+  digitalWrite (zMoveDir, LOW);
  
   Serial.begin(115200);
 }
  
 void loop(){
-  if(instruction==1){
-    digitalWrite(smDirectionPin, HIGH);
-    for (int i = 0; i < 1600; i++){
-      digitalWrite(smStepPin, HIGH);
-      delayMicroseconds(700);
-      digitalWrite(smStepPin, LOW);
-      delayMicroseconds(700);
-    }
-  }else if(instruction==2){
-    digitalWrite(smDirectionPin, LOW);
-    for (int i = 0; i < 1600; i++){
-      digitalWrite(smStepPin, HIGH);
-      delayMicroseconds(700);
-      digitalWrite(smStepPin, LOW);
-      delayMicroseconds(700);
-    }
+
+  if(direct<0){
+    direccion = LOW;
+  }else{
+    direccion = HIGH;
   }
- if(instruction==3){
-    digitalWrite(smDirectionPin2, HIGH);
-    for (int i = 0; i < 1600; i++){
-      digitalWrite(smStepPin2, HIGH);
-      delayMicroseconds(700);
-      digitalWrite(smStepPin2, LOW);
-      delayMicroseconds(700);
-    }
-  }else if(instruction==4){
-    digitalWrite(smDirectionPin2, LOW);
-    for (int i = 0; i < 1600; i++){
-      digitalWrite(smStepPin2, HIGH);
-      delayMicroseconds(700);
-      digitalWrite(smStepPin2, LOW);
-      delayMicroseconds(700);
-    }
-  }
-  if (dobEngin==1){
-     digitalWrite(smDirectionPin, HIGH);
-     digitalWrite(smDirectionPin2, HIGH);
-    for (int i = 0; i < 1600; i++){
-      digitalWrite(smStepPin, HIGH);
-      digitalWrite(smStepPin2, HIGH);
-      delayMicroseconds(700);
-      digitalWrite(smStepPin, LOW);
-      digitalWrite(smStepPin2, LOW);
-      delayMicroseconds(700);
-    }
-  }      
-   if (dobEngin==2){
-     digitalWrite(smDirectionPin, LOW);
-     digitalWrite(smDirectionPin2, LOW);
-    for (int i = 0; i < 1600; i++){
-      digitalWrite(smStepPin, HIGH);
-      digitalWrite(smStepPin2, HIGH);
-      delayMicroseconds(700);
-      digitalWrite(smStepPin, LOW);
-      digitalWrite(smStepPin2, LOW);
-      delayMicroseconds(700);
-  }
-   }
-   if (dobEngin==3){
-     digitalWrite(smDirectionPin, HIGH);
-     digitalWrite(smDirectionPin2, LOW);
-    for (int i = 0; i < 1600; i++){
-      digitalWrite(smStepPin, HIGH);
-      digitalWrite(smStepPin2, HIGH);
-      delayMicroseconds(700);
-      digitalWrite(smStepPin, LOW);
-      digitalWrite(smStepPin2, LOW);
-      delayMicroseconds(700);
-  }
-   }
-   if (dobEngin==4){
-     digitalWrite(smDirectionPin, LOW);
-     digitalWrite(smDirectionPin2, HIGH);
-    for (int i = 0; i < 1600; i++){
-      digitalWrite(smStepPin, HIGH);
-      digitalWrite(smStepPin2, HIGH);
-      delayMicroseconds(700);
-      digitalWrite(smStepPin, LOW);
-      digitalWrite(smStepPin2, LOW);
-      delayMicroseconds(700);
-  }
-   }
   
-dobEngin = 0;
+  if(instruction==1){                     //inkinput 1
+    digitalWrite(puInkDir, direccion);
+    for (int i = 0; i < volumeToInput; i++){
+      digitalWrite(puInkStep, HIGH);
+      delayMicroseconds(speedd);
+      digitalWrite(puInkStep, LOW);
+      delayMicroseconds(speedd);
+    }
+  }else if(instruction==2){              //Water input 2
+    digitalWrite(puWaterDir, direccion);
+    for (int i = 0; i < volumeToInput; i++){
+      digitalWrite(puWaterStep, HIGH);
+      delayMicroseconds(speedd);
+      digitalWrite(puWaterStep, LOW);
+      delayMicroseconds(speedd);
+    }
+  }else if(instruction==3){              //Water pull 3
+    digitalWrite(sWaterDir, !direccion);
+    for (int i = 0; i < volumeToInput; i++){
+      digitalWrite(sWaterStep, HIGH);
+      delayMicroseconds(speedd);
+      digitalWrite(sWaterStep, LOW);
+      delayMicroseconds(speedd);
+    }
+  }else if(instruction==4){              //Z move printing 4
+    digitalWrite(zMoveDir, direccion);
+    for (int i = 0; i < volumeToInput; i++){
+      digitalWrite(zMoveStep, HIGH);
+      delayMicroseconds(speedd);
+      digitalWrite(zMoveStep, LOW);
+      delayMicroseconds(speedd);
+    }
+  }else if(instruction==5){              //Water pull and push
+    digitalWrite(sWaterDir, !direccion);
+    digitalWrite(puWaterDir, direccion);
+    for (int i = 0; i < volumeToInput*1.4; i++){
+      digitalWrite(sWaterStep, HIGH);
+      digitalWrite(puWaterStep, HIGH);
+      delayMicroseconds(speedd);
+      digitalWrite(sWaterStep, LOW);
+      digitalWrite(puWaterStep, LOW);
+      delayMicroseconds(speedd);
+    }
+  }else if(instruction==6){              //Water pull and ink push
+    digitalWrite(sWaterDir, !direccion);
+    digitalWrite(puInkDir, direccion);
+    for (int i = 0; i < volumeToInput*1.4; i++){#
+      digitalWrite(sWaterStep, HIGH);
+      digitalWrite(puInkStep, HIGH);
+      delayMicroseconds(speedd);
+      digitalWrite(sWaterStep, LOW);
+      digitalWrite(puInkStep, LOW);
+      delayMicroseconds(speedd);
+    }
+  }
+  
   instruction = 0;
 }            
 void serialEvent() {
   while (Serial.available()) {
     x = Serial.readStringUntil('\r');
-    instruction = x.toInt();
-    Serial.println(instruction);
-   
     y = Serial.readStringUntil('\r');
-    dobEngin = y.toInt();
-    Serial.println(dobEngin);
-   
+    z = Serial.readStringUntil('\r');
+    instruction = x.toInt();
+    direct = y.toInt();
+    speedd = z.toInt();
+    Serial.print(instruction);
+    Serial.print(direct);
+    Serial.println(speedd);
   }
 }
